@@ -19,7 +19,6 @@ def c2f_rate(c):
   return (180.0/100.0) * c
 
 _room_temp = f2c(70)
-_rate = f2c_rate(9.0) # per minute
 _hour = 60
 
 def time_str(t):
@@ -56,7 +55,7 @@ class segment:
     s = []
     s.append('%-22s' % self.name)
     s.append('%.1f > %.1f' % (c2f(t), c2f(self.target)))
-    s.append('rate %f' % (c2f_rate(self.rate) * 60))
+    s.append('rate %.1f' % (c2f_rate(self.rate) * 60))
     s.append('ramp_time %s' % time_str(ramp_time))
     s.append('hold_time %s' % time_str(self.hold))
     return (ramp_time + self.hold, self.target, ' '.join(s))
@@ -85,12 +84,31 @@ class profile:
     return '\n'.join(s)
 
 def main():
-  p = profile('8hr wax burnout', _room_temp)
-  p.add(segment('water elimination', f2c(300), _rate, 1 * _hour))
-  p.add(segment('wax elimination', f2c(700), _rate, 2 * _hour))
-  p.add(segment('thermal expansion', f2c(900), _rate, 1 * _hour))
-  p.add(segment('complete elimination', f2c(1350), _rate, 3 * _hour))
-  p.add(segment('casting temperature', f2c(1000), _rate, 1 * _hour))
-  print(p)
+
+  rate = f2c_rate(540.0/60.0)
+  p = profile('8hr wax/pla burnout 3.5" x 5" flask', _room_temp)
+  p.add(segment('water elimination', f2c(300), rate, 1 * _hour))
+  p.add(segment('wax elimination', f2c(700), rate, 2 * _hour))
+  p.add(segment('thermal expansion', f2c(900), rate, 1 * _hour))
+  p.add(segment('complete elimination', f2c(1350), rate, 3 * _hour))
+  p.add(segment('bronze casting temp', f2c(1000), rate, 1 * _hour))
+  print('%s\n' % p)
+
+  rate = f2c_rate(200.0/60.0)
+  p = profile('bisque firing', _room_temp)
+  p.add(segment('1st water removal', f2c(200), rate, 2 * _hour))
+  p.add(segment('2nd water removal', f2c(300), rate, 0.5 * _hour))
+  p.add(segment('quartz inversion', f2c(1060), rate, 0.5 * _hour))
+  p.add(segment('balancing', f2c(1832), rate, 0))
+  print('%s\n' % p)
+
+  rate = f2c_rate(540.0/60.0)
+  p = profile('12 hr wax/pla burnout, 3.5" x 9.5" flask', _room_temp)
+  p.add(segment('water elimination', f2c(300), rate, 2 * _hour))
+  p.add(segment('wax elimination', f2c(700), rate, 2 * _hour))
+  p.add(segment('thermal expansion', f2c(900), rate, 2 * _hour))
+  p.add(segment('complete elimination', f2c(1350), rate, 4 * _hour))
+  p.add(segment('aluminum casting temp', f2c(700), rate, 2 * _hour))
+  print('%s\n' % p)
 
 main()
