@@ -32,7 +32,7 @@ def flask_vol(d, h):
 def main():
 
   pattern_vol = 167.0 * mm3_per_cm3
-  vol = flask_vol(2.5 * mm_per_in, 9.0 * mm_per_in)
+  vol = flask_vol(3.25 * mm_per_in, 8.0 * mm_per_in)
   vol -= pattern_vol
   vol *= extra_factor
 
